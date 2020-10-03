@@ -23,8 +23,12 @@ app.listen(port, () => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile( path.join(__dirname + '/index.html') );
+    res.render( path.join(__dirname + '/index.html') );
 })
+app.get('/rooms', (req, res) => {
+    res.render( path.join(__dirname + '/rooms.html') );
+})
+
 app.post('/rooms', (req, res) => {
     res.render( path.join(__dirname + '/rooms.html') , { name : new Date(req.body.start_date)});
 

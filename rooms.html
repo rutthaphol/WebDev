@@ -65,8 +65,8 @@
                         <div class="nav-menu">
                             <nav class="mainmenu">
                                 <ul>
-                                    <li><a href="./index.html">Home</a></li>
-                                    <li class="active"><a href="./rooms.html">Rooms</a></li>
+                                    <li><a href="/">Home</a></li>
+                                    <li class="active"><a href="./rooms">Rooms</a></li>
                                     <li><a href="./about-us.html">About Us</a></li>
                                     <li><a href="./pages.html">Pages</a>
                                         <ul class="dropdown">
@@ -414,11 +414,14 @@
     <script src="js/main.js"></script>
     <script>
         window.onload = setDate
-        function setDate(){
-            let getTest = '<%= name  %>'
-            $('#date-in').val("")
-            let $datepicker = $('#date-in');
-            $datepicker.datepicker('setDate', new Date(getTest));
+        function setDate() {
+            <% if (locals.name) { %>
+            let getTest = '<%= name %>';;
+            if(typeof getTest !== 'undefined'){
+                let $datepicker = $('#date-in');
+                $datepicker.datepicker('setDate', new Date(getTest));
+            }
+        <% } %>
         }
     </script>
 </body>
