@@ -126,6 +126,8 @@
         $("#date-out").datepicker("option", "minDate", new Date(new Date(selected).getTime() + 1 * 24*60*60*1000));
         }
     });
+
+    console.log("EIEI")
     
     $( "#date-out" ).datepicker({
         changeMonth: true,
