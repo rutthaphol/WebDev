@@ -126,6 +126,7 @@
         $("#date-out").datepicker("option", "minDate", new Date(new Date(selected).getTime() + 1 * 24*60*60*1000));
         }
     });
+    
     $( "#date-out" ).datepicker({
         changeMonth: true,
         changeYear: true,
