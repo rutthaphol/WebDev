@@ -30,7 +30,9 @@ app.get('/rooms', (req, res) => {
 })
 
 app.post('/rooms', (req, res) => {
-    res.render( path.join(__dirname + '/rooms.html') , { name : new Date(req.body.start_date)});
+    res.render( path.join(__dirname + '/rooms.html') , { name : new Date(req.body.start_date)
+        , endDate : new Date(req.body.end_date), Adult : req.body.guest_name, 
+        children : req.body.room_name});
 
     console.log(req.body);
 })

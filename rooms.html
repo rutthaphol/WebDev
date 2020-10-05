@@ -101,22 +101,22 @@
                     </div>
                     <div class="check-date">
                         <!-- <label for="date-out">Check Out:</label> -->
-                        <input type="text" class="date-input" id="date-out" placeholder="Check Out">
+                        <input type="text" autocomplete="off" class="date-input" id="date-out" placeholder="Check Out">
                         <i class="icon_calendar"></i>
                     </div>
                     <div class="select-option">
                         <!-- <label for="guest">Guests:</label> -->
-                        <select id="guest">
-                          <option value="">1 Adults</option>
-                            <option value="">2 Adults</option>
-                            <option value="">3 Adults</option>
+                        <select id="guest" name="guest_name">
+                            <option value="1" <% if (locals.Adult == '1') { %>selected<% } %> >1 Adults</option>
+                            <option value="2" <% if (locals.Adult == '2') { %>selected<% } %> >2 Adults</option>
+                            <option value="3" <% if (locals.Adult == '3') { %>selected<% } %> >3 Adults</option>
                         </select>
                     </div>
                     <div class="select-option">
                         <!-- <label for="room">Room:</label> -->
-                        <select id="room">
-                            <option value="">1 Room</option>
-                            <option value="">2 Room</option>
+                        <select id="room" name="room_name">
+                            <option value="1" <% if (locals.children == '1') { %>selected<% } %> >1 Room</option>
+                            <option value="2" <% if (locals.children == '2') { %>selected<% } %> >2 Room</option>
                         </select>
                     </div>
                     <button class="button-calendar" type="submit">Check Availability</button>
@@ -416,12 +416,26 @@
         window.onload = setDate
         function setDate() {
             <% if (locals.name) { %>
-            let getTest = '<%= name %>';;
-            if(typeof getTest !== 'undefined'){
+            let getStartDate = '<%= name %>'
+            if(typeof getStartDate !== 'undefined'){
                 let $datepicker = $('#date-in');
-                $datepicker.datepicker('setDate', new Date(getTest));
+                $datepicker.datepicker('setDate', new Date(getStartDate));
             }
         <% } %>
+
+            <% if (locals.endDate) { %>
+            let getEndDate = '<%= endDate %>'
+            if(typeof getEndDate !== 'undefined'){
+                let $datepicker = $('#date-out');
+                $datepicker.datepicker('setDate', new Date(getEndDate));
+            }
+        <% } %>
+        
+        // <% if (locals.Adult) { %>
+        //     // <option value='<%= Adult %>'></option>
+        // <% } %>
+
+
         }
     </script>
 </body>

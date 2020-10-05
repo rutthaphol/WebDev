@@ -127,8 +127,6 @@
         }
     });
 
-    console.log("EIEI")
-    
     $( "#date-out" ).datepicker({
         changeMonth: true,
         changeYear: true,
