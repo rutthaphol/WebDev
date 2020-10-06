@@ -3,11 +3,19 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 var path = require('path');
+
 const { deflate } = require('zlib');
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+var mysql = require('mysql');
+var config = {
+    user: 'HostHotel',
+    password: '123456',
+    server: 'localhost',
+    database: 'hotel'
+};
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('html' , require('ejs').renderFile)
 app.set('view engine' , 'html')
 
@@ -26,14 +34,35 @@ app.get('/', (req, res) => {
     res.render( path.join(__dirname + '/index.html') );
 })
 app.get('/rooms', (req, res) => {
-    res.render( path.join(__dirname + '/rooms.html') );
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query("SELECT * FROM room_desc", function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/rooms.html') , {CheckPeople : result});
+            console.log(result);
+            con.end()
+      });
+    });
 })
 
 app.post('/rooms', (req, res) => {
-    res.render( path.join(__dirname + '/rooms.html') , { name : new Date(req.body.start_date)
-        , endDate : new Date(req.body.end_date), Adult : req.body.guest_name, 
-        children : req.body.room_name});
-
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query("SELECT * FROM room_desc", function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/rooms.html') , 
+            { name : new Date(req.body.start_date), endDate : new Date(req.body.end_date),
+                Adult : req.body.guest_name, children : req.body.childrens, 
+                CheckPeople : result});
+            console.log(result);
+            con.end()
+      });
+    });
+    // res.render( path.join(__dirname + '/rooms.html') , { name : new Date(req.body.start_date)
+    //     , endDate : new Date(req.body.end_date), Adult : req.body.guest_name, 
+    //     children : req.body.room_name});
     console.log(req.body);
 })
 

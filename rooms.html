@@ -92,16 +92,16 @@
 
     <div class="container">
             <div class="booking-form">
-                <form class="form-calendar" autocomplete="off" action="#">
+                <form class="form-calendar" autocomplete="off" action="./rooms" method="POST">
                     <div class="check-date">
                         <!-- <label for="date-in">Check In:</label> -->
-                        <input type="text" autocomplete="off" class="date-input" id="date-in" placeholder="Check In">
+                        <input type="text" autocomplete="off" class="date-input" id="date-in" name="start_date" placeholder="Check In">
                         
                         <i class="icon_calendar"></i>
                     </div>
                     <div class="check-date">
                         <!-- <label for="date-out">Check Out:</label> -->
-                        <input type="text" autocomplete="off" class="date-input" id="date-out" placeholder="Check Out">
+                        <input type="text" autocomplete="off" class="date-input" id="date-out" name="end_date" placeholder="Check Out">
                         <i class="icon_calendar"></i>
                     </div>
                     <div class="select-option">
@@ -115,8 +115,8 @@
                     <div class="select-option">
                         <!-- <label for="room">Room:</label> -->
                         <select id="room" name="room_name">
-                            <option value="1" <% if (locals.children == '1') { %>selected<% } %> >1 Room</option>
-                            <option value="2" <% if (locals.children == '2') { %>selected<% } %> >2 Room</option>
+                            <option value="0" <% if (locals.children == '0') { %>selected<% } %> >0 childrens</option>
+                            <option value="1" <% if (locals.children == '1') { %>selected<% } %> >1 childrens</option>
                         </select>
                     </div>
                     <button class="button-calendar" type="submit">Check Availability</button>
@@ -149,186 +149,78 @@
     <section class="rooms-section spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="room-item">
-                        <img src="img/room/room-1.jpg" alt="">
-                        <div class="ri-text">
-                            <h4>Premium King Room</h4>
-                            <h3>159$<span>/Pernight</span></h3>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 3</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">BOOK</a>
+                <% if (typeof locals.name !== 'undefined') { %>
+                    <% for(let i = 0;i < 6;i++) { %>
+                        <% if (Adult <= locals.CheckPeople[i].Adults && children <= locals.CheckPeople[i].Children) {  %>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="room-item">
+                                <img src="<%= locals.CheckPeople[i].Picture %>" alt="">
+                                <div class="ri-text">
+                                    <h4><%= locals.CheckPeople[i].Name %></h4>
+                                    <h3><%= locals.CheckPeople[i].Price %>$<span>/Pernight</span></h3>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td class="r-o">Size:</td>
+                                                <td>30 ft</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Capacity:</td>
+                                                <td><%= locals.CheckPeople[i].Adults %> and <%= locals.CheckPeople[i].Children %></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Bed:</td>
+                                                <td>King Beds</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Services:</td>
+                                                <td>Wifi, Television, Bathroom,...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a href="#" class="primary-btn" id = '<%= locals.CheckPeople[i].Name %>'>BOOK</a>
+                                    <h2></h2>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="room-item">
-                        <img src="img/room/room-2.jpg" alt="">
-                        <div class="ri-text">
-                            <h4>Deluxe Room</h4>
-                            <h3>159$<span>/Pernight</span></h3>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 5</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">BOOK</a>
+                        <% } %>
+                    <% } %>
+                <% } 
+                else{ %>
+                    <% for(let i = 0;i < 6;i++) { %>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="room-item">
+                                <img src="<%= locals.CheckPeople[i].Picture %>" alt="">
+                                <div class="ri-text">
+                                    <h4><%= locals.CheckPeople[i].Name %></h4>
+                                    <h3><%= locals.CheckPeople[i].Price %>$<span>/Pernight</span></h3>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td class="r-o">Size:</td>
+                                                <td>30 ft</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Capacity:</td>
+                                                <td><%= locals.CheckPeople[i].Adults %> and <%= locals.CheckPeople[i].Children %></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Bed:</td>
+                                                <td>King Beds</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Services:</td>
+                                                <td>Wifi, Television, Bathroom,...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a href="#" class="primary-btn" id = '<%= locals.CheckPeople[i].Name %>'>BOOK</a>
+                                    <h2></h2>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="room-item">
-                        <img src="img/room/room-3.jpg" alt="">
-                        <div class="ri-text">
-                            <h4>Double Room</h4>
-                            <h3>159$<span>/Pernight</span></h3>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">BOOK</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="room-item">
-                        <img src="img/room/room-4.jpg" alt="">
-                        <div class="ri-text">
-                            <h4>Luxury Room</h4>
-                            <h3>159$<span>/Pernight</span></h3>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">BOOK</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="room-item">
-                        <img src="img/room/room-5.jpg" alt="">
-                        <div class="ri-text">
-                            <h4>Room With View</h4>
-                            <h3>159$<span>/Pernight</span></h3>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">BOOK</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="room-item">
-                        <img src="img/room/room-6.jpg" alt="">
-                        <div class="ri-text">
-                            <h4>Small View</h4>
-                            <h3>159$<span>/Pernight</span></h3>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Size:</td>
-                                        <td>30 ft</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>Max persion 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Bed:</td>
-                                        <td>King Beds</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="r-o">Services:</td>
-                                        <td>Wifi, Television, Bathroom,...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <a href="#" class="primary-btn">BOOK</a>
-                        </div>
-                    </div>
-                </div>
+                    <% } %>
+                <% } %>
             </div>
         </div>
     </section>
@@ -416,7 +308,7 @@
         window.onload = setDate
         function setDate() {
             <% if (locals.name) { %>
-            let getStartDate = '<%= name %>'
+            let getStartDate = '<%= name %>';
             if(typeof getStartDate !== 'undefined'){
                 let $datepicker = $('#date-in');
                 $datepicker.datepicker('setDate', new Date(getStartDate));
@@ -424,18 +316,13 @@
         <% } %>
 
             <% if (locals.endDate) { %>
-            let getEndDate = '<%= endDate %>'
+            let getEndDate = '<%= endDate %>';
             if(typeof getEndDate !== 'undefined'){
                 let $datepicker = $('#date-out');
                 $datepicker.datepicker('setDate', new Date(getEndDate));
             }
         <% } %>
-        
-        // <% if (locals.Adult) { %>
-        //     // <option value='<%= Adult %>'></option>
-        // <% } %>
-
-
+            console.log("EIEI");
         }
     </script>
 </body>
