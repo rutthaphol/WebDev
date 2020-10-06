@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -95,13 +95,13 @@
                 <form class="form-calendar" autocomplete="off" action="./rooms" method="POST">
                     <div class="check-date">
                         <!-- <label for="date-in">Check In:</label> -->
-                        <input type="text" autocomplete="off" class="date-input" id="date-in" name="start_date" placeholder="Check In">
+                        <input type="text" autocomplete="off" class="date-input" id="date-in" name="start_date" placeholder="Check In"  required>
                         
                         <i class="icon_calendar"></i>
                     </div>
                     <div class="check-date">
                         <!-- <label for="date-out">Check Out:</label> -->
-                        <input type="text" autocomplete="off" class="date-input" id="date-out" name="end_date" placeholder="Check Out">
+                        <input type="text" autocomplete="off" class="date-output" id="date-out"  name="end_date" placeholder="Check Out"  required>
                         <i class="icon_calendar"></i>
                     </div>
                     <div class="select-option">
@@ -114,7 +114,7 @@
                     </div>
                     <div class="select-option">
                         <!-- <label for="room">Room:</label> -->
-                        <select id="room" name="room_name">
+                        <select id="childrens" name="childrens">
                             <option value="0" <% if (locals.children == '0') { %>selected<% } %> >0 childrens</option>
                             <option value="1" <% if (locals.children == '1') { %>selected<% } %> >1 childrens</option>
                         </select>
@@ -322,7 +322,6 @@
                 $datepicker.datepicker('setDate', new Date(getEndDate));
             }
         <% } %>
-            console.log("EIEI");
         }
     </script>
 </body>
