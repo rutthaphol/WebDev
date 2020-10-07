@@ -1,0 +1,7 @@
+Query Room
+SELECT * 
+FROM room_desc AS D 
+where D.ID NOT IN (SELECT B.ID from room_booking AS B  
+WHERE (B.Start_Date >= '2020-10-15' AND B.Start_Date < '2020-10-21') 
+OR (B.End_Date >= '2020-10-15' AND B.End_Date < '2020-10-21'))
+

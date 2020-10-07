@@ -150,14 +150,14 @@
         <div class="container">
             <div class="row">
                 <% if (typeof locals.name !== 'undefined') { %>
-                    <% for(let i = 0;i < 6;i++) { %>
-                        <% if (Adult <= locals.CheckPeople[i].Adults && children <= locals.CheckPeople[i].Children) {  %>
+                    <% for(let i of locals.CheckPeople) { %>
+                        <% if (Adult <= i.Adults && children <= i.Children) {  %>
                         <div class="col-lg-4 col-md-6">
                             <div class="room-item">
-                                <img src="<%= locals.CheckPeople[i].Picture %>" alt="">
+                                <img src="<%= i.Picture %>" alt="">
                                 <div class="ri-text">
-                                    <h4><%= locals.CheckPeople[i].Name %></h4>
-                                    <h3><%= locals.CheckPeople[i].Price %>$<span>/Pernight</span></h3>
+                                    <h4><%= i.Name %></h4>
+                                    <h3><%= i.Price %>$<span>/Pernight</span></h3>
                                     <table>
                                         <tbody>
                                             <tr>
@@ -166,7 +166,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="r-o">Capacity:</td>
-                                                <td><%= locals.CheckPeople[i].Adults %> and <%= locals.CheckPeople[i].Children %></td>
+                                                <td><%= i.Adults %> and <%= i.Children %></td>
                                             </tr>
                                             <tr>
                                                 <td class="r-o">Bed:</td>
@@ -178,7 +178,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" class="primary-btn" id = '<%= locals.CheckPeople[i].Name %>'>BOOK</a>
+                                    <a href="#" class="primary-btn" id = '<%= i.Name %>'>BOOK</a>
                                     <h2></h2>
                                 </div>
                             </div>

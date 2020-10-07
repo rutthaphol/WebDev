@@ -114,7 +114,7 @@
     $( "#date-in" ).datepicker({
         changeMonth: true,
         changeYear: true,
-        dateFormat:'dd MM, yy',
+        dateFormat:'dd MM yy',
         minDate: dateToday,
         onClose: function (selected) {
         if(selected.length <= 0) {
@@ -126,11 +126,11 @@
         $("#date-out").datepicker("option", "minDate", new Date(new Date(selected).getTime() + 1 * 24*60*60*1000));
         }
     });
-
+    // dateFormat:'dd MM, yy'
     $( "#date-out" ).datepicker({
         changeMonth: true,
         changeYear: true,
-        dateFormat:'dd MM, yy',
+        dateFormat:'dd MM yy',
         minDate: dateTomorrow,
         onClose: function (selected) {
         if(selected.length <= 0) {

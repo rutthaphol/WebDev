@@ -37,7 +37,7 @@ app.get('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
     con.connect(function(err) {
     if (err) throw err;
-        con.query("SELECT * FROM room_desc", function (err, result, fields) {
+        con.query("SELECT DISTINCT Name,Adults,Children,Price,Picture FROM room_desc", function (err, result, fields) {
             if (err) throw err;
             res.render( path.join(__dirname + '/rooms.html') , {CheckPeople : result});
             console.log(result);
@@ -48,9 +48,19 @@ app.get('/rooms', (req, res) => {
 
 app.post('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
+    let FormatStartDate = new Date(req.body['start_date']);
+    let FormatEndDate = new Date(req.body['end_date']);
+    FormatStartDate = FormatStartDate.toISOString().substring(0, 10);
+    FormatEndDate = FormatEndDate.toISOString().substring(0, 10);
+    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Picture FROM room_desc AS D where D.ID NOT IN "+
+    "(SELECT B.ID from room_booking AS B  WHERE "+
+    "(B.Start_Date >= " + "'" + FormatStartDate + "'" + 
+    " AND B.Start_Date <" + "'" + FormatEndDate + "'" + ") OR (B.End_Date >= "
+     + "'" + FormatStartDate + "'" + " AND B.End_Date <" + "'" + FormatEndDate + "'" + "))";
+    console.log(Query);
     con.connect(function(err) {
     if (err) throw err;
-        con.query("SELECT * FROM room_desc", function (err, result, fields) {
+        con.query(Query, function (err, result, fields) {
             if (err) throw err;
             res.render( path.join(__dirname + '/rooms.html') , 
             { name : new Date(req.body.start_date), endDate : new Date(req.body.end_date),
