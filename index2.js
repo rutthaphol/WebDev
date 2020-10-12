@@ -24,7 +24,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, '/')));
- 
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
@@ -75,4 +75,7 @@ app.post('/rooms', (req, res) => {
     //     children : req.body.room_name});
     console.log(req.body);
 })
-
+//api booking rooms
+app.get('/rooms/booking', (req, res) => {
+    res.render( path.join(__dirname + '/booking-rooms.html') );
+})
