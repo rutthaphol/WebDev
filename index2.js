@@ -45,14 +45,21 @@ app.get('/rooms', (req, res) => {
       });
     });
 })
-
+var GetData = Array();
 app.post('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
     let FormatStartDate = new Date(req.body['start_date']);
+    FormatStartDate.setDate(FormatStartDate.getDate() + 1);
+    console.log(FormatStartDate);
     let FormatEndDate = new Date(req.body['end_date']);
+    FormatEndDate.setDate(FormatEndDate.getDate() + 1);
     FormatStartDate = FormatStartDate.toISOString().substring(0, 10);
     FormatEndDate = FormatEndDate.toISOString().substring(0, 10);
-    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Picture FROM room_desc AS D where D.ID NOT IN "+
+    GetData[0] = FormatStartDate;
+    GetData[1] = FormatEndDate;
+    GetData[2] = req.body.guest_name;
+    GetData[3] = req.body.childrens;
+    let Query = "SELECT ID,Name,Adults,Children,Price,Picture FROM room_desc AS D where D.ID NOT IN "+
     "(SELECT B.ID from room_booking AS B  WHERE "+
     "(B.Start_Date >= " + "'" + FormatStartDate + "'" + 
     " AND B.Start_Date <" + "'" + FormatEndDate + "'" + ") OR (B.End_Date >= "
@@ -77,5 +84,26 @@ app.post('/rooms', (req, res) => {
 })
 //api booking rooms
 app.get('/rooms/booking', (req, res) => {
-    res.render( path.join(__dirname + '/booking-rooms.html') );
+    res.render( path.join(__dirname + '/booking-rooms.html') , {name : GetData[0], 
+        endDate : GetData[1],
+        Adult : GetData[2], children :GetData[3]});
+})
+
+app.post('/rooms/booking/Payment_receipt', (req, res) => {
+    let QueryInsertBooking = "INSERT INTO room_booking (ID,Start_Date,End_Date) VALUES (" + "'" + 1 + "'" +
+     ", '" + GetData[0] + "' , '" + GetData[1] + "');";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+        if (err) throw err;
+            con.query(QueryInsertBooking, function (err, result, fields) {
+                if (err) throw err;
+                con.query("SELECT * from room_booking", function (err, result, fields) {
+                    if (err) throw err;
+                    
+                    res.render( path.join(__dirname + '/signUp.html') , {CheckPeople : result});
+                    console.log(result);
+                    con.end()
+                });
+          });
+    });
 })

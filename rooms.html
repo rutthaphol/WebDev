@@ -150,7 +150,20 @@
         <div class="container">
             <div class="row">
                 <% if (typeof locals.name !== 'undefined') { %>
+                    <% let distinctroom = Array() %>
+                    <% let count = 0 %>
+                    <% distinctroom[count] = locals.CheckPeople[0].Name  %>
                     <% for(let i of locals.CheckPeople) { %>
+                        <% let checkrooms = 0 %>
+                        <% for(let j of distinctroom) { %>
+                            <% if (count == 0) { %>
+                                <% break %>
+                            <% } else if (i.Name == j) { %>
+                                <% checkrooms = 1 %>
+                                <% break %>
+                            <% } %>
+                        <% } %>
+                        <% if (checkrooms == 0) { %>
                         <% if (Adult <= i.Adults && children <= i.Children) {  %>
                         <div class="col-lg-4 col-md-6">
                             <form action="/rooms/booking" method="GET">
@@ -179,19 +192,29 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <button type="submit" class="button-calendar" id = '<%= i.Name %>'>Booking</button>
+                                        <button type="submit" class="button-calendar" id = '<%= i.ID %>' name='<%= i.Name %>'>Booking</button>
                                         <!-- <a href="#" class="primary-btn" id = '<%= i.Name %>'>BOOK</a> -->
                                     </div>
                                 </div>
                             </form>
                         </div>
+                        <% if (count == 0) { %>
+                            <% count++ %>
+                        <% } 
+                        else {%>
+                            <% distinctroom[count] = i.Name  %>
+                            <% count++ %>
                         <% } %>
+
+                        <% } %>
+                        <% } %>
+
                     <% } %>
                 <% } 
                 else{ %>
                     <% for(let i of locals.CheckPeople) { %>
                         <div class="col-lg-4 col-md-6">
-                            <form action="/rooms/booking" method="GET">
+                            <form method="GET">
                                 <div class="room-item">
                                     <img src="<%= i.Picture %>" alt="">
                                     <div class="ri-text">
@@ -217,7 +240,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <button type="submit" class="button-calendar" id = '<%= i.Name %>'>Booking</button>
+                                        <button type="submit" class="button-calendar" id = '<%= i.Name %>' onclick="AlertCheckAvailable()">Booking</button>
                                         <!-- <a href="#" class="primary-btn" id = '<%= i.Name %>'>BOOK</a> -->
                                     </div>
                                 </div>
@@ -308,6 +331,11 @@
     <script src="js/jquery.slicknav.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        function AlertCheckAvailable() {
+            alert("Please check the available rooms.");
+        }
+        </script>
     <script>
         window.onload = setDate
         function setDate() {

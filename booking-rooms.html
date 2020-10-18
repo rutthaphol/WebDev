@@ -20,19 +20,18 @@
         <div class="row">
             <div class="col-75">
               <div class="container">
-                <form action="/action_page.php">
-                
+                <form action="/rooms/booking/Payment_receipt" method="POST">
                   <div class="row">
                     <div class="col-50">
                       <h3>Billing Address</h3>
                       <label for="fname"><i class="fa fa-user"></i> Full Name</label>
-                      <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
+                      <input type="text" id="fname" name="firstname" placeholder="John M. Doe" maxlength="80" minlength="80" onKeyPress="return ValidateAlpha(event);" required>
                       <label for="email"><i class="fa fa-envelope"></i> Email</label>
                       <input type="text" id="email" name="email" placeholder="john@example.com">
                       <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
                       <input type="text" id="adr" name="address" placeholder="542 W. 15th Street">
-                      <label for="city"><i class="fa fa-institution"></i> City</label>
-                      <input type="text" id="city" name="city" placeholder="New York">
+                      <label for="city"><i class="fa fa-volume-control-phone"></i> Phone number</label>
+                      <input type="text" id="Phone" name="Phone" placeholder="081-111-1111" maxlength="10" minlength="10" onkeypress="return checkDigit(event)" onblur="formatPhone(this);" required>
           
                       <div class="row">
                         <div class="col-50">
@@ -41,7 +40,7 @@
                         </div>
                         <div class="col-50">
                           <label for="zip">Zip</label>
-                          <input type="text" id="zip" name="zip" placeholder="10001">
+                          <input type="text" id="zip" name="zip" placeholder="10001" maxlength="5" minlength="5" onkeypress="return checkDigit(event)" required>
                         </div>
                       </div>
                     </div>
@@ -56,33 +55,51 @@
                         <i class="fa fa-cc-discover" style="color:orange;"></i>
                       </div>
                       <label for="cname">Name on Card</label>
-                      <input type="text" id="cname" name="cardname" placeholder="John More Doe">
+                      <input type="text" id="cname" name="cardname" placeholder="John More Doe" onKeyPress="return ValidateAlpha(event);" required>
                       <label for="ccnum">Credit card number</label>
-                      <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+                      <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444" onkeypress="return checkDigit(event)" required>
                       <label for="expmonth">Exp Month</label>
-                      <input type="text" id="expmonth" name="expmonth" placeholder="September">
+                      <!-- <input type="text" id="expmonth" name="expmonth" placeholder="September"> -->
+                      <!-- <label for="expmonth">Exp Month</label> -->
+                            <select id="expmonth" name="expmonth" >
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
                       <div class="row">
                         <div class="col-50">
-                          <label for="expyear">Exp Year</label>
-                          <input type="text" id="expyear" name="expyear" placeholder="2018">
+                            <label for="expyear">Exp Year</label>
+                            <input type="text" id="expyear" name="expyear" placeholder="2018" maxlength="4" minlength="4" onkeypress="return checkDigit(event)" required>
                         </div>
                         <div class="col-50">
                           <label for="cvv">CVV</label>
-                          <input type="text" id="cvv" name="cvv" placeholder="352">
+                          <input type="text" id="cvv" name="cvv" placeholder="352" maxlength="3" minlength="3" onkeypress="return checkDigit(event)" required>
                         </div>
                       </div>
                     </div>
                     
                   </div>
-                  <label>
+                  <!-- <label>
                     <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
-                  </label>
-                  <input type="submit" value="Continue to checkout" class="btn">
+                  </label> -->
+                  <input type="submit" value="Continue to checkout" class="btn" onclick="return handleChange()">
                 </form>
               </div>
             </div>
             <div class="col-25">
-              <div class="container">
+              <div class="container-cart">
+                <% if (typeof locals.name !== 'undefined') { %>
+                    <p><%= locals.name %></a> <span class="price">$15</span></p>
+                <% } %>
                 <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b>4</b></span></h4>
                 <p><a href="#">Product 1</a> <span class="price">$15</span></p>
                 <p><a href="#">Product 2</a> <span class="price">$5</span></p>
@@ -93,5 +110,92 @@
               </div>
             </div>
           </div>
+    <script>
+        function formatPhone(obj) {
+            let numbers = obj.value.replace(/\D/g, ''),
+                char = {0:'',3:'-',6:'-'};
+            obj.value = '';
+            for (var i = 0; i < numbers.length; i++) {
+                obj.value += (char[i]||'') + numbers[i];
+            }
+        }
+    </script>
+    <script>
+        function cc_format(value) {
+        var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+        var matches = v.match(/\d{4,16}/g);
+        var match = matches && matches[0] || ''
+        var parts = []
+        for (i=0, len=match.length; i<len; i+=4) {
+            parts.push(match.substring(i, i+4))
+        }
+        if (parts.length) {
+            return parts.join(' ')
+        } else {
+            return value
+            }
+        }
+        onload = function() {
+            document.getElementById('ccnum').oninput = function() {
+                this.value = cc_format(this.value)
+            }
+        }
+        function checkDigit(event) {
+            var code = (event.which) ? event.which : event.keyCode;
+            if ((code < 48 || code > 57) && (code > 31)) {
+                return false;
+            }
+            return true;
+        }
+        function ValidateAlpha(evt)
+        {
+            var keyCode = (evt.which) ? evt.which : evt.keyCode
+            if ((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32 && (keyCode < 3585 || keyCode > 3660))
+            
+            return false;
+                return true;
+        }
+        </script>
+        <script>
+            function handleChange(input) {
+                let today, someday;
+                let x = document.getElementById("ccnum").value;
+                let exMonth = document.getElementById("expmonth").value;
+                let exYear = document.getElementById("expyear").value;
+                let checkmail = document.getElementById("email").value;
+                let checkphone = document.getElementById("Phone").value;
+                let checkzip = document.getElementById("zip").value;
+                today = new Date();
+                someday = new Date();
+                someday.setFullYear(exYear, exMonth, 1);
+
+                if (someday < today) {
+                    alert("The expiry date is before today's date. Please select a valid expiry date");
+                    return false;
+                }
+                console.log(x.length);
+                if (x.length != 19) {
+                    alert("Please enter a valid credit card number.");
+                    return false;
+                }
+                if(checkphone.length != 12)
+                {
+                    alert("Please enter complete phone numbers.");
+                    return false;
+                }
+                if(checkzip.length != 5)
+                {
+                    alert("Please fill in the correct information.");
+                    return false;
+                }
+                const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if (re.test(checkmail) == false) 
+                {
+                    alert('Invalid Email Address');
+                    return false;
+                }
+                return true;
+            }
+        </script>
     </body>
 </html>
