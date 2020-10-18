@@ -29,6 +29,7 @@ console.log(req.params.custId123);
 console.log(req.body.custId);
 })
 app.post('/ex', (req, res) => {
+    console.log(req.params.custId123);
   res.sendFile( path.join(__dirname + '/EX.html') );
 })
 
