@@ -14,7 +14,7 @@
 
         <!-- Css Styles -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/css/stylebooking.css" type="text/css">
+        <link rel="stylesheet" href="/public//css/stylebooking.css" type="text/css">
     </head>
     <body>
         <div class="row">
@@ -25,7 +25,7 @@
                     <div class="col-50">
                       <h3>Billing Address</h3>
                       <label for="fname"><i class="fa fa-user"></i> Full Name</label>
-                      <input type="text" id="fname" name="firstname" placeholder="John M. Doe" maxlength="80" minlength="80" onKeyPress="return ValidateAlpha(event);" required>
+                      <input type="text" id="fname" name="firstname" placeholder="John M. Doe" maxlength="100" minlength="1" onKeyPress="return ValidateAlpha(event);" required>
                       <label for="email"><i class="fa fa-envelope"></i> Email</label>
                       <input type="text" id="email" name="email" placeholder="john@example.com">
                       <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
@@ -91,22 +91,31 @@
                   <!-- <label>
                     <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
                   </label> -->
+
+                  <input type="hidden" id="custId" name="custStartDate" value='<%= startDate %>'>
+                  <input type="hidden" id="custId" name="custEndDate" value='<%= endDate %>'>
+                  <input type="hidden" id="custId" name="custAdults" value='<%= Adult %>'>
+                  <input type="hidden" id="custId" name="custChildren" value='<%= children %>'>
+                  <input type="hidden" id="custId" name="custId" value='<%= room_id %>'>
+                  <input type="hidden" id="custId" name="custName" value='<%= Style %>'>
+                  <input type="hidden" id="custId" name="custPrice" value='<%= Price %>'>
+
                   <input type="submit" value="Continue to checkout" class="btn" onclick="return handleChange()">
                 </form>
               </div>
             </div>
             <div class="col-25">
               <div class="container-cart">
-                <% if (typeof locals.name !== 'undefined') { %>
-                    <p><%= locals.name %></a> <span class="price">$15</span></p>
+                <% if (typeof locals.startDate !== 'undefined') { %>
+                    <p>Check In</a> <span class="price"><%= locals.startDate %></span></p>
+                    <p>Check Out</a> <span class="price"><%= locals.endDate %></span></p>
+                    <p>Adult</a> <span class="price"><%= locals.Adult %></span></p>
+                    <p>Children</a> <span class="price"><%= locals.children %></span></p>
                 <% } %>
-                <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b>4</b></span></h4>
-                <p><a href="#">Product 1</a> <span class="price">$15</span></p>
-                <p><a href="#">Product 2</a> <span class="price">$5</span></p>
-                <p><a href="#">Product 3</a> <span class="price">$8</span></p>
-                <p><a href="#">Product 4</a> <span class="price">$2</span></p>
+                <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b>1</b></span></h4>
+                <p><%= locals.Style %></a> <span class="price">$<%= locals.Price %></span></p>
                 <hr>
-                <p>Total <span class="price" style="color:black"><b>$30</b></span></p>
+                <p>Total <span class="price" style="color:black"><b>$<%= locals.Price %></b></span></p>
               </div>
             </div>
           </div>

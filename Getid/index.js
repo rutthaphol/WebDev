@@ -22,14 +22,11 @@ app.set('view engine' , 'html')
 
 
 app.get('/test', (req, res) => {
-  console.log(req.body);
-  res.sendFile( path.join(__dirname + '/form.html'),{name : req.params.custId123} );
-console.log(req.params.id);
-console.log(req.params.custId123);
-console.log(req.body.custId);
+  res.sendFile( path.join(__dirname + '/form.html'));
 })
 app.post('/ex', (req, res) => {
-  res.sendFile( path.join(__dirname + '/EX.html') );
+  console.log(req.body.custId);
+  // res.render( path.join(__dirname + '/EX.html') );
 })
 
 

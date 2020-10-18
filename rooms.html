@@ -14,16 +14,16 @@
     <link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600,700&display=swap" rel="stylesheet">
 
     <!-- Css Styles -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="css/flaticon.css" type="text/css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="css/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="css/stylecalendar.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/flaticon.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/public/css/stylecalendar.css" type="text/css">
 </head>
 
 <body>
@@ -57,7 +57,7 @@
                     <div class="col-lg-2">
                         <div class="logo">
                             <a href="./index.html">
-                                <img src="img/logo.png" alt="">
+                                <img src="/public/img/logo.png" alt="">
                             </a>
                         </div>
                     </div>
@@ -168,7 +168,7 @@
                         <div class="col-lg-4 col-md-6">
                             <form action="/rooms/booking" method="GET">
                                 <div class="room-item">
-                                    <img src="<%= i.Picture %>" alt="">
+                                    <img src="/public/<%= i.Picture %>" alt="">
                                     <div class="ri-text">
                                         <h4><%= i.Name %></h4>
                                         <h3><%= i.Price %>$<span>/Pernight</span></h3>
@@ -192,7 +192,15 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <button type="submit" class="button-calendar" id = '<%= i.ID %>' name='<%= i.Name %>'>Booking</button>
+                                        <input type="hidden" id="custId" name="custStartDate" value='<%= name %>'>
+                                        <input type="hidden" id="custId" name="custEndDate" value='<%= endDate %>'>
+                                        <input type="hidden" id="custId" name="custAdults" value='<%= Adult %>'>
+                                        <input type="hidden" id="custId" name="custChildren" value='<%= children %>'>
+
+                                        <input type="hidden" id="custId" name="custId" value='<%= i.ID %>'>
+                                        <input type="hidden" id="custId" name="custName" value='<%= i.Name %>'>
+                                        <input type="hidden" id="custId" name="custPrice" value='<%= i.Price %>'>
+                                        <button type="submit" value="submit" class="button-calendar">Booking</button>
                                         <!-- <a href="#" class="primary-btn" id = '<%= i.Name %>'>BOOK</a> -->
                                     </div>
                                 </div>
@@ -216,7 +224,7 @@
                         <div class="col-lg-4 col-md-6">
                             <form method="GET">
                                 <div class="room-item">
-                                    <img src="<%= i.Picture %>" alt="">
+                                    <img src="/public/<%= i.Picture %>" alt="">
                                     <div class="ri-text">
                                         <h4><%= i.Name %></h4>
                                         <h3><%= i.Price %>$<span>/Pernight</span></h3>
@@ -262,7 +270,7 @@
                         <div class="ft-about">
                             <div class="logo">
                                 <a href="#">
-                                    <img src="img/footer-logo.png" alt="">
+                                    <img src="/public/img/footer-logo.png" alt="">
                                 </a>
                             </div>
                             <p>We inspire and reach millions of travelers<br /> across 90 local websites</p>
@@ -323,19 +331,22 @@
 
 
     <!-- Js Plugins -->
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="js/jquery.slicknav.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="/public/js/jquery-3.3.1.min.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+    <script src="/public/js/jquery.magnific-popup.min.js"></script>
+    <script src="/public/js/jquery.nice-select.min.js"></script>
+    <script src="/public/js/jquery-ui.min.js"></script>
+    <script src="/public/js/jquery.slicknav.js"></script>
+    <script src="/public/js/owl.carousel.min.js"></script>
+    <script src="/public/js/main.js"></script>
     <script>
         function AlertCheckAvailable() {
             alert("Please check the available rooms.");
         }
         </script>
+    <script>
+        
+    </script>
     <script>
         window.onload = setDate
         function setDate() {
