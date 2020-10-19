@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Sona Template">
+    <meta name="keywords" content="Sona, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="/public/css/styleInvoice.css" media="all" />
+  </head>
+  <body>
+    <header class="clearfix">
+      <div id="logo">
+        <img src="/public/img/logoInvoice.png">
+      </div>
+      <h1>INVOICE 3-2-1</h1>
+      <div id="company" class="clearfix">
+        <div>Sona</div>
+        <div>856 Cordia Extension Apt.<br /> 356, Lake, United State</div>
+        <div>(12) 345 67890</div>
+        <div><a href="mailto:info.colorlib@gmail.com">info.colorlib@gmail.com</a></div>
+      </div>
+      <div id="project">
+        <div><span>PROJECT</span> <%= Style %></div>
+        <div><span>CLIENT</span> <%= Name %></div>
+        <div><span>ADDRESS</span> <%= Address %></div>
+        <div><span>EMAIL</span> <a href="mailto:<%= Email %>"> <%= Email %></a></div>
+        <div><span>Phone</span> <%= Phone %></div>
+        <div><span>DATE</span> <%= StartDate %></div>
+        <div><span>DUE DATE</span> <%= endDate %></div>
+      </div>
+    </header>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th class="service">SERVICE</th>
+            <th class="desc">DESCRIPTION</th>
+            <th>PRICE</th>
+            <th>QTY</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="service">Rent</td>
+            <td class="desc"><%= Style %></td>
+            <td class="unit"><%= Price %></td>
+            <td class="qty">1</td>
+            <td class="total"></td>
+          </tr>
+          <tr>
+            <td colspan="4">SUBTOTAL</td>
+            <td class="total"><%= Price %></td>
+          </tr>
+          <tr>
+            <td colspan="4">TAX 7%</td>
+            <% if (typeof locals.Price !== 'undefined') { %>
+            <td class="total"><%- parseInt(Price*7/100) %></td>
+            <% } %>
+          </tr>
+          <tr>
+            <td colspan="4" class="grand total">GRAND TOTAL</td>
+            <% if (typeof locals.Price !== 'undefined') { %>
+              <% let Total = Math.ceil(parseInt(Price) + parseInt(Price*7/100)); %>
+              <td class="grand total"><%= Total %></td>
+            <% } %>
+            
+          </tr>
+        </tbody>
+      </table>
+      <div id="notices">
+        <div>NOTICE:</div>
+        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+      </div>
+    </main>
+    <footer>
+      Invoice was created on a computer and is valid without the signature and seal.
+    </footer>
+  </body>
+</html>

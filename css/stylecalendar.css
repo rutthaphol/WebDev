@@ -1960,6 +1960,9 @@ ul, ol {
 .map iframe {
 	width: 100%;
 }
+.serviceroom{
+	margin-left: 29%;
+}
 /*-------------------------------- Respinsive Media Styles --------------------------------*/
 
 @media only screen and (min-width: 1554px) and (max-width: 1920px) {

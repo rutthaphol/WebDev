@@ -37,8 +37,7 @@ app.get('/', (req, res) => {
     }
     else{
         res.render( path.join(__dirname + '/index.html') );
-    }
-    
+    } 
 })
 app.get('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
@@ -75,7 +74,7 @@ app.post('/rooms', (req, res) => {
             { name : new Date(req.body.start_date), endDate : new Date(req.body.end_date),
                 Adult : req.body.guest_name, children : req.body.childrens, 
                 CheckPeople : result});
-            // console.log(result);
+            //  console.log(result);
             con.end()
       });
     });
@@ -93,6 +92,11 @@ app.get('/rooms/booking', (req, res) => {
         room_id : req.query.custId, Style : req.query.custName, Price : req.query.custPrice });
 })
 
+function FormatDate(date){
+    let options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString("en-US", options);
+}
+
 app.post('/rooms/booking/Payment_receipt', (req, res) => {
     let FormatStartDate = new Date(req.body['custStartDate']);
     FormatStartDate.setDate(FormatStartDate.getDate());
@@ -100,7 +104,6 @@ app.post('/rooms/booking/Payment_receipt', (req, res) => {
     FormatEndDate.setDate(FormatEndDate.getDate());
     FormatStartDate = FormatStartDate.toISOString().substring(0, 10);
     FormatEndDate = FormatEndDate.toISOString().substring(0, 10);
-    console.log(FormatEndDate);
     let QueryCheck = "SELECT ID from room_booking where " +
     "((Start_Date >= " + "'" + FormatStartDate + "'" + 
     " AND Start_Date <" + "'" + FormatEndDate + "'" + ") OR (End_Date >= "
@@ -117,6 +120,9 @@ app.post('/rooms/booking/Payment_receipt', (req, res) => {
     let QueryLog = "INSERT INTO rental_record (Room_number,Room_name,CheckIn,CheckOut,Name,Email,Address,Phone_number,State,Zip) VALUES ('" + 
     req.body.custId + "', '" + req.body.custName + "', '" + FormatStartDate + "', '" + FormatEndDate + "', '" + req.body.firstname + "', '"
     + req.body.email + "', '" + req.body.address + "', '" + req.body.Phone + "', '" + req.body.state + "', '" + req.body.zip + "');";
+
+    let Tax = Math.ceil(parseInt(req.body.custPrice) + parseInt(req.body.custPrice*7/100));
+    
     var con = mysql.createConnection(config);
     con.connect(function(err) {
         if (err) throw err;
@@ -139,10 +145,10 @@ app.post('/rooms/booking/Payment_receipt', (req, res) => {
                                 req.body.address + "', '" + req.body.Phone + "', '" + req.body.state + "', '" + req.body.zip + "');";
                                 con.query(QueryLog2, function (err, result2, fields) {
                                     if (err) throw err;
-                                    res.render( path.join(__dirname + '/signUp.html') , {Name : req.body.firstname, Email : req.body.email,
-                                    Phone : req.body.Phone, StartDate : req.body.custStartDate, endDate : req.body.custEndDate, 
-                                    Adult : req.body.custAdults, children : req.body.custChildren,Style : req.body.custName, 
-                                    Price : req.body.custPrice});
+                                    res.render( path.join(__dirname + '/Invoice.html') , {Name : req.body.firstname, Email : req.body.email, 
+                                    Address : req.body.address,Phone : req.body.Phone, StartDate : FormatDate(req.body.custStartDate), 
+                                    endDate : FormatDate(req.body.custEndDate), Adult : req.body.custAdults, children : req.body.custChildren,
+                                    Style : req.body.custName, Price : req.body.custPrice, TotalTax : Tax});
                                     con.end()
                                 });
                             });
@@ -159,10 +165,10 @@ app.post('/rooms/booking/Payment_receipt', (req, res) => {
                         if (err) throw err;
                         con.query(QueryLog, function (err, result2, fields) {
                             if (err) throw err;
-                            res.render( path.join(__dirname + '/signUp.html') , {Name : req.body.firstname, Email : req.body.email,
-                                Phone : req.body.Phone, StartDate : req.body.custStartDate, endDate : req.body.custEndDate, 
-                                Adult : req.body.custAdults, children : req.body.custChildren,Style : req.body.custName, 
-                                Price : req.body.custPrice});
+                            res.render( path.join(__dirname + '/Invoice.html') , {Name : req.body.firstname, Email : req.body.email, 
+                                Address : req.body.address,Phone : req.body.Phone, StartDate : FormatDate(req.body.custStartDate), 
+                                endDate : FormatDate(req.body.custEndDate), Adult : req.body.custAdults, children : req.body.custChildren,
+                                Style : req.body.custName, Price : req.body.custPrice, TotalTax : Tax});
                             // console.log(result);
                             con.end()
                         });
@@ -170,4 +176,8 @@ app.post('/rooms/booking/Payment_receipt', (req, res) => {
                 } 
           });
     });
+})
+
+app.get('/invoice', (req, res) => {
+        res.render( path.join(__dirname + '/Invoice.html') );
 })

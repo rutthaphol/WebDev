@@ -152,6 +152,7 @@
                 <% if (typeof locals.name !== 'undefined') { %>
                     <% let distinctroom = Array() %>
                     <% let count = 0 %>
+                    <% if (locals.CheckPeople.length != 0) { %>
                     <% distinctroom[count] = locals.CheckPeople[0].Name  %>
                     <% for(let i of locals.CheckPeople) { %>
                         <% let checkrooms = 0 %>
@@ -217,6 +218,12 @@
                         <% } %>
                         <% } %>
 
+                    <% } %>
+                    <% } 
+                    else { %>
+                        <div class="serviceroom">
+                                <h2>I’m sorry. All rooms are taken.</h2>
+                        </div>
                     <% } %>
                 <% } 
                 else{ %>
