@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 12, 2020 at 03:08 PM
+-- Generation Time: Oct 24, 2020 at 03:19 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.31
 
@@ -47,8 +47,8 @@ INSERT INTO `room_desc` (`ID`, `Name`, `Adults`, `Children`, `Price`, `Picture`)
 (4, 'Deluxe Room', 2, 0, 159, 'img/room/room-2.jpg'),
 (5, 'Double Room', 3, 1, 159, 'img/room/room-3.jpg'),
 (6, 'Double Room', 3, 1, 159, 'img/room/room-3.jpg'),
-(7, 'Luxury Room', 2, 1, 159, 'img/room/room-4.jpg'),
-(8, 'Luxury Room', 2, 1, 159, 'img/room/room-4.jpg'),
+(7, 'Luxury Room', 3, 0, 159, 'img/room/room-4.jpg'),
+(8, 'Luxury Room', 3, 0, 159, 'img/room/room-4.jpg'),
 (9, 'Room With View', 2, 1, 159, 'img/room/room-5.jpg'),
 (10, 'Room With View', 2, 1, 159, 'img/room/room-5.jpg'),
 (11, 'Small View', 2, 0, 159, 'img/room/room-6.jpg'),

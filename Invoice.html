@@ -14,7 +14,7 @@
       <div id="logo">
         <img src="/public/img/logoInvoice.png">
       </div>
-      <h1>INVOICE 3-2-1</h1>
+      <h1>INVOICE</h1>
       <div id="company" class="clearfix">
         <div>Sona</div>
         <div>856 Cordia Extension Apt.<br /> 356, Lake, United State</div>
@@ -22,6 +22,7 @@
         <div><a href="mailto:info.colorlib@gmail.com">info.colorlib@gmail.com</a></div>
       </div>
       <div id="project">
+        <div><span>Booking No.</span> <%= No_Booking %></div>
         <div><span>PROJECT</span> <%= Style %></div>
         <div><span>CLIENT</span> <%= Name %></div>
         <div><span>ADDRESS</span> <%= Address %></div>
@@ -46,25 +47,25 @@
           <tr>
             <td class="service">Rent</td>
             <td class="desc"><%= Style %></td>
-            <td class="unit"><%= Price %></td>
-            <td class="qty">1</td>
-            <td class="total"></td>
+            <td class="unit" style="text-align:center"><%= Price %></td>
+            <td class="qty" style="text-align:center">1</td>
+            <td class="total" style="text-align:center"></td>
           </tr>
           <tr>
             <td colspan="4">SUBTOTAL</td>
-            <td class="total"><%= Price %></td>
+            <td class="total" style="text-align:center"><%= Price %></td>
           </tr>
           <tr>
             <td colspan="4">TAX 7%</td>
             <% if (typeof locals.Price !== 'undefined') { %>
-            <td class="total"><%- parseInt(Price*7/100) %></td>
+            <td class="total" style="text-align:center"><%- parseInt(Price*7/100) %></td>
             <% } %>
           </tr>
           <tr>
             <td colspan="4" class="grand total">GRAND TOTAL</td>
             <% if (typeof locals.Price !== 'undefined') { %>
               <% let Total = Math.ceil(parseInt(Price) + parseInt(Price*7/100)); %>
-              <td class="grand total"><%= Total %></td>
+              <td class="grand total" style="text-align:center"><%= Total %></td>
             <% } %>
             
           </tr>
