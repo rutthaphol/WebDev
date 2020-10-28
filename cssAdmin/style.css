@@ -259,6 +259,20 @@ a.logo:hover,a.logo:focus {
 a.logo span {
     color: #FF6C60;
 }
+a.logo2 {
+    font-size:32px;
+    color:#fff;
+    float:left;
+    margin:8px 0 0 10px;
+    text-transform:uppercase;
+}
+a.logo2:hover,a.logo2:focus {
+    text-decoration:none;
+    outline:none;
+}
+a.logo2 span {
+    color: #FF6C60;
+}
 /*notification*/
 #top_menu .nav>li,ul.top-menu>li {
     float:left;

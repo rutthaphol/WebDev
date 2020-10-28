@@ -31,6 +31,61 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
+var cron = require('node-cron');
+//Schedule every 17.30
+cron.schedule('30 17 * * *', () => {
+    var con = mysql.createConnection(config);
+    let QueryDelete = 'DELETE FROM room_booking WHERE Start_Date <= CURDATE() AND StatusCheckIn = 0;';
+    console.log("Runing a job at 17.30 ");
+    con.connect(function(err) {
+        if (err) throw err;
+            con.query(QueryDelete, function (err, result, fields) {
+                if (err) throw err;
+                con.query(QueryDelete, function (err, result, fields) {
+                    if (err) throw err;
+                    con.end()
+                });
+            });
+    });
+  }, {
+    scheduled: true,
+    timezone: "Asia/Bangkok"
+});
+function formatDate(nDate){
+    const newnDate = new Date(nDate).toLocaleString('en-US', {
+        timeZone: 'Asia/Bangkok'
+      });
+    let summation;
+    if(newnDate[2] == '/' && newnDate[4] == '/')
+    {
+        let day = newnDate.substring(3, 4);
+        let month = newnDate.substring(0, 2);
+        let year = newnDate.substring(5, 9);
+        summation = year+"-"+month+"-"+day;
+    }
+    else if(newnDate[2] == '/' && newnDate[5] == '/')
+    {
+        let day = newnDate.substring(3, 5);
+        let month = newnDate.substring(0, 2);
+        let year = newnDate.substring(6, 10);
+        summation = year+"-"+month+"-"+day;
+    }
+    else if(newnDate[1] == '/' && newnDate[4] == '/')
+    {
+        let day = newnDate.substring(2, 4);
+        let month = newnDate.substring(0, 1);
+        let year = newnDate.substring(5, 9);
+        summation = year+"-"+month+"-"+day;
+    }
+    else
+    {
+        let day = newnDate.substring(2, 3);
+        let month = newnDate.substring(0, 1);
+        let year = newnDate.substring(4, 8);
+        summation = year+"-"+month+"-"+day;
+    }
+    return summation;
+}
 
 app.get('/', (req, res) => {
     if(typeof req.query.msg !== "undefined"){
@@ -55,12 +110,10 @@ app.get('/rooms', (req, res) => {
 
 app.post('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
-    let FormatStartDate = new Date(req.body['start_date']);
-    FormatStartDate.setDate(FormatStartDate.getDate() + 1);
-    let FormatEndDate = new Date(req.body['end_date']);
-    FormatEndDate.setDate(FormatEndDate.getDate() + 1);
-    FormatStartDate = FormatStartDate.toISOString().substring(0, 10);
-    FormatEndDate = FormatEndDate.toISOString().substring(0, 10);
+    let Sdate = req.body['start_date'];
+    let Edate = req.body['end_date'];
+    let FormatStartDate = formatDate(Sdate);
+    let FormatEndDate = formatDate(Edate);
     let Query = "SELECT ID,Name,Adults,Children,Price,Picture FROM room_desc AS D where D.ID NOT IN "+
     "(SELECT B.ID from room_booking AS B  WHERE "+
     "(B.Start_Date >= " + "'" + FormatStartDate + "'" + 
@@ -73,24 +126,22 @@ app.post('/rooms', (req, res) => {
         con.query(Query, function (err, result, fields) {
             if (err) throw err;
             res.render( path.join(__dirname + '/rooms.html') , 
-            { name : new Date(req.body.start_date), endDate : new Date(req.body.end_date),
+            { name : FormatStartDate, endDate : FormatEndDate,
                 Adult : req.body.guest_name, children : req.body.childrens, 
                 CheckPeople : result});
-             console.log(result);
+            //  console.log(result);
             con.end()
       });
     });
 })
 //api booking rooms
 app.get('/rooms/booking', (req, res) => {
-    let FormatStartDate = new Date(req.query['custStartDate']);
-    FormatStartDate.setDate(FormatStartDate.getDate() + 1);
-    let FormatEndDate = new Date(req.query['custEndDate']);
-    FormatEndDate.setDate(FormatEndDate.getDate() + 1);
-    FormatStartDate = FormatStartDate.toISOString().substring(0, 10);
-    FormatEndDate = FormatEndDate.toISOString().substring(0, 10);
-    res.render( path.join(__dirname + '/booking-rooms.html') , {startDate : FormatStartDate, 
-        endDate : FormatEndDate, Adult : req.query.custAdults, children : req.query.custChildren, 
+    let Sdate = req.query['custStartDate'];
+    let Edate = req.query['custEndDate'];
+    let FormatStartDate = formatDate(Sdate);
+    let FormatEndDate = formatDate(Edate);
+    res.render( path.join(__dirname + '/booking-rooms.html') , {startDate : FormatDate(FormatStartDate), 
+        endDate : FormatDate(FormatEndDate), Adult : req.query.custAdults, children : req.query.custChildren, 
         room_id : req.query.custId, Style : req.query.custName, Price : req.query.custPrice });
 })
 
@@ -111,8 +162,6 @@ function checkDupBookingNumber(con , bookingNumber) {
             // con.end()
         });
     })
-    
-    
 }
 
 app.post('/rooms/booking/Payment_receipt', async (req, res) => {
@@ -126,12 +175,10 @@ app.post('/rooms/booking/Payment_receipt', async (req, res) => {
                 if(result.length == 0){
                     isDup = false
                     //do everything below here
-                    let FormatStartDate = new Date(req.body['custStartDate']);
-                    FormatStartDate.setDate(FormatStartDate.getDate());
-                    let FormatEndDate = new Date(req.body['custEndDate']);
-                    FormatEndDate.setDate(FormatEndDate.getDate());
-                    FormatStartDate = FormatStartDate.toISOString().substring(0, 10);
-                    FormatEndDate = FormatEndDate.toISOString().substring(0, 10);
+                    let Sdate = req.body['custStartDate'];
+                    let Edate = req.body['custEndDate'];
+                    let FormatStartDate = formatDate(Sdate);
+                    let FormatEndDate = formatDate(Edate);
                     let QueryCheck = "SELECT ID from room_booking where " +
                     "((Start_Date >= " + "'" + FormatStartDate + "'" + 
                     " AND Start_Date <" + "'" + FormatEndDate + "'" + ") OR (End_Date >= "
@@ -229,27 +276,24 @@ app.get('/Admin', (req, res) => {
 })
 app.get('/Admin/table', (req, res) => {
     let Query;
-    let FormatStartDate = new Date(req.query['start_date']);
-    FormatStartDate.setDate(FormatStartDate.getDate()+ 1);
-    FormatStartDate.setHours(FormatStartDate.getHours()- 3);
-
-    if(FormatStartDate instanceof Date && !isNaN(FormatStartDate))
+    let Sdate = req.query['start_date'];
+    let FormatStartDate = formatDate(Sdate);
+    let Name;
+    if(req.query['start_date'] !== '' && typeof(Sdate) !== 'undefined')
     {
-        FormatStartDate = FormatStartDate.toISOString().substring(0, 10); 
-        if(typeof(req.query['name-input']) !== 'undefined')
+        if(req.query['name-input'] !== '' && typeof(req.query['name-input']) !== 'undefined')
         {
             let Name = req.query['name-input'];
-            Query = "SELECT * FROM rental_record where CheckIn >= '" + FormatStartDate +"' And Name LIKE '%" + Name +"%'";
+            Query = "SELECT * FROM rental_record where CheckIn = '" + FormatStartDate +"' And Name LIKE '%" + Name +"%'";
         }
         else
         {
-            
-            Query = "SELECT * FROM rental_record where CheckIn >= '" + FormatStartDate +"'";
+            Query = "SELECT * FROM rental_record where CheckIn = '" + FormatStartDate +"'";
         }
     }
-    else if(typeof(req.query['name-input']) !== 'undefined')
+    else if(req.query['name-input'] !== '' && typeof(req.query['name-input']) !== 'undefined')
     {
-        let Name = req.query['name-input'];
+        Name = req.query['name-input'];
         Query = "SELECT * FROM rental_record where Name LIKE '%" + Name +"%'";
     }
     else{
@@ -261,59 +305,60 @@ app.get('/Admin/table', (req, res) => {
         if (err) throw err;
             con.query(Query, function (err, result, fields) {
                 if (err) throw err;
-                res.render( path.join(__dirname + '/basic_table.html'),{record:result, Pages : 1});
+                res.render( path.join(__dirname + '/record_table.html'),{record:result });
                 con.end()
           });
     }); 
 })
 app.get('/Admin/Checking', (req, res) => {
     let Query;
-    let FormatStartDate = new Date(req.query['start_date']);
-    FormatStartDate.setDate(FormatStartDate.getDate()+ 1);
-    FormatStartDate.setHours(FormatStartDate.getHours()- 3);
-
-    if(FormatStartDate instanceof Date && !isNaN(FormatStartDate))
+    let Sdate = req.query['start_date'];
+    let FormatStartDate = formatDate(Sdate);
+    let Name;
+    if(req.query['start_date'] !== '' && typeof(Sdate) !== 'undefined')
     {
         // console.log(FormatStartDate);
-        FormatStartDate = FormatStartDate.toISOString().substring(0, 10);
-        if(typeof(req.query['name-input']) !== 'undefined')
+        if(req.query['name-input'] !== '' && typeof(req.query['name-input']) !== 'undefined')
         {
             let Name = req.query['name-input'];
-            Query = "SELECT * FROM room_booking where Start_Date >= '" + FormatStartDate +"' AND StatusCheckIn = '0' And Name LIKE '%" + Name +"%'";
+            Query = "SELECT * FROM room_booking where Start_Date = '" + FormatStartDate +"' AND StatusCheckIn = '0' And Name LIKE '%" + Name +"%'";
         }
         else
         {
-            
-            Query = "SELECT * FROM room_booking where Start_Date >= '" + FormatStartDate +"'";  
+            Query = "SELECT * FROM room_booking where Start_Date = '" + FormatStartDate +"' AND StatusCheckIN = '0'";  
         }
-        console.log(Query);
+        
     }
-    else if(typeof(req.query['name-input']) !== 'undefined')
+    else if(req.query['name-input'] !== '' && typeof(req.query['name-input']) !== 'undefined')
     {
-        let Name = req.query['name-input'];
+        Name = req.query['name-input'];
         Query = "SELECT * FROM room_booking where StatusCheckIn = '0' And Name LIKE '%" + Name +"%'";
     }
     else{
-        let today = new Date(Date.now()+ 1 * 7*60*60*1000); 
-        console.log(today);
-        today = today.toISOString().substring(0, 10);
-        Query = "SELECT * FROM room_booking where Start_Date >= '" + today +"' AND StatusCheckIn = '0';";
+        let today = new Date().toLocaleString('en-US', {
+            timeZone: 'Asia/Bangkok'
+        });
+        today = formatDate(today);
+        Query = "SELECT * FROM room_booking where Start_Date = '" + today +"' AND StatusCheckIn = '0';";
     }
+    console.log(Query);
     var con = mysql.createConnection(config);
     con.connect(function(err) {
         if (err) throw err;
             con.query(Query, function (err, result, fields) {
                 if (err) throw err;
-                res.render( path.join(__dirname + '/responsive_table.html'),{record:result });
+                res.render( path.join(__dirname + '/checkin.html'),{record : result });
                 con.end()
           });
     }); 
 })
 app.post('/Admin/Checking', (req, res) => {
     let Booking_Number = req.body.custID;
-    let today = new Date(Date.now()+ 1 * 7*60*60*1000); 
-    console.log(Booking_Number);
-    let Query = "SELECT * FROM room_booking where Start_Date >= '" + today +"' AND StatusCheckIn = '0';";
+    let Sdate = req.body['start_date'];
+    let FormatStartDate = formatDate(Sdate);
+    let Query = "SELECT * FROM room_booking where Start_Date = '" + FormatStartDate +"' AND StatusCheckIn = '0';";
+    console.log(Query);
+    console.log(FormatStartDate);
     let QueryUpdateBook = "UPDATE room_booking SET StatusCheckIn = 1 WHERE Booking_No = '" + Booking_Number + "';";
     let QueryUpdateLog = "UPDATE rental_record SET Stay = 1 WHERE Booking_No = '" + Booking_Number + "';";
     var con = mysql.createConnection(config);
@@ -323,9 +368,9 @@ app.post('/Admin/Checking', (req, res) => {
                 if (err) throw err;
                 con.query(QueryUpdateLog, function (err, result, fields) {
                     if (err) throw err;
-                    con.query(Query, function (err, result, fields) {
+                    con.query(Query, function (err, result3, fields) {
                         if (err) throw err;
-                        res.render( path.join(__dirname + '/responsive_table.html'),{record:result });
+                        res.render( path.join(__dirname + '/checkin.html'),{record:result3});
                         con.end()
                     });
                 });
