@@ -103,9 +103,6 @@ app.get('/about-us', (req, res) => {
     res.render( path.join(__dirname + '/about-us.html') );
 })
 
-app.get('/room-details', (req, res) => {
-    res.render( path.join(__dirname + '/room-details.html') );
-})
 
 app.get('/details-premium', (req, res) => {
     res.render( path.join(__dirname + '/PremiumKingRoom.html') );
@@ -134,6 +131,11 @@ app.get('/details-Small', (req, res) => {
 app.get('/contact', (req, res) => {
     res.render( path.join(__dirname + '/contact') );
 })
+
+app.get('/cancel', (req, res) => {
+    res.render( path.join(__dirname + '/Cancel.html') );
+})
+
 app.get('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
     con.connect(function(err) {
