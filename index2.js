@@ -107,6 +107,30 @@ app.get('/room-details', (req, res) => {
     res.render( path.join(__dirname + '/room-details.html') );
 })
 
+app.get('/details-premium', (req, res) => {
+    res.render( path.join(__dirname + '/PremiumKingRoom.html') );
+})
+
+app.get('/details-Deluxe', (req, res) => {
+    res.render( path.join(__dirname + '/DeluxeRoom.html') );
+})
+
+app.get('/details-Double', (req, res) => {
+    res.render( path.join(__dirname + '/DoubleRoom.html') );
+})
+
+app.get('/details-Luxury', (req, res) => {
+    res.render( path.join(__dirname + '/LuxuryRoom.html') );
+})
+
+app.get('/details-ViewRoom', (req, res) => {
+    res.render( path.join(__dirname + '/RoomWithView.html') );
+})
+
+app.get('/details-Small', (req, res) => {
+    res.render( path.join(__dirname + '/SmallView.html') );
+})
+
 app.get('/contact', (req, res) => {
     res.render( path.join(__dirname + '/contact') );
 })
