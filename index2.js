@@ -31,6 +31,9 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
+// console.log(new Date().toLocaleString('en-US', {
+//     timeZone: 'Asia/Bangkok'
+// }));
 var cron = require('node-cron');
 //Schedule every 17.30
 cron.schedule('30 17 * * *', () => {
@@ -94,6 +97,18 @@ app.get('/', (req, res) => {
     else{
         res.render( path.join(__dirname + '/index.html') );
     } 
+})
+
+app.get('/about-us', (req, res) => {
+    res.render( path.join(__dirname + '/about-us.html') );
+})
+
+app.get('/room-details', (req, res) => {
+    res.render( path.join(__dirname + '/room-details.html') );
+})
+
+app.get('/contact', (req, res) => {
+    res.render( path.join(__dirname + '/contact') );
 })
 app.get('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
