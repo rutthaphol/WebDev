@@ -91,12 +91,20 @@ function formatDate(nDate){
 }
 
 app.get('/', (req, res) => {
-    if(typeof req.query.msg !== "undefined"){
-        res.render( path.join(__dirname + '/index.html') , {Message : "Failed"});
-    }
-    else{
-        res.render( path.join(__dirname + '/index.html') );
-    } 
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query("SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture,Api FROM room_desc", function (err, result, fields) {
+            if (err) throw err;
+            if(typeof req.query.msg !== "undefined"){
+                res.render( path.join(__dirname + '/index.html') , {Room : result, Message : "Failed"});
+            }
+            else{
+                res.render( path.join(__dirname + '/index.html') , {Room : result} );
+            } 
+            con.end()
+      });
+    });
 })
 
 app.get('/about-us', (req, res) => {
@@ -105,27 +113,82 @@ app.get('/about-us', (req, res) => {
 
 
 app.get('/details-premium', (req, res) => {
-    res.render( path.join(__dirname + '/PremiumKingRoom.html') );
+    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture FROM `room_desc` WHERE Name = 'Premium King Room'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query(Query, function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/PremiumKingRoom.html'),{Premium : result} );
+            con.end()
+      });
+    });
 })
 
 app.get('/details-Deluxe', (req, res) => {
-    res.render( path.join(__dirname + '/DeluxeRoom.html') );
+    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture FROM `room_desc` WHERE Name = 'Deluxe Room'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query(Query, function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/DeluxeRoom.html'),{ Deluxe : result});
+            con.end()
+      });
+    });
 })
 
 app.get('/details-Double', (req, res) => {
-    res.render( path.join(__dirname + '/DoubleRoom.html') );
+    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture FROM `room_desc` WHERE Name = 'Double Room'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query(Query, function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/DoubleRoom.html'),{Double : result} );
+            con.end()
+      });
+    });
 })
 
 app.get('/details-Luxury', (req, res) => {
-    res.render( path.join(__dirname + '/LuxuryRoom.html') );
+    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture FROM `room_desc` WHERE Name = 'Luxury Room'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query(Query, function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/LuxuryRoom.html'),{Luxury : result});
+            con.end()
+      });
+    });
 })
 
 app.get('/details-ViewRoom', (req, res) => {
-    res.render( path.join(__dirname + '/RoomWithView.html') );
+    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture FROM `room_desc` WHERE Name = 'Room With View'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query(Query, function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/RoomWithView.html'),{WithView : result});
+            con.end()
+      });
+    });
 })
 
 app.get('/details-Small', (req, res) => {
-    res.render( path.join(__dirname + '/SmallView.html') );
+    let Query = "SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture FROM `room_desc` WHERE Name = 'Small View'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query(Query, function (err, result, fields) {
+            if (err) throw err;
+            res.render( path.join(__dirname + '/SmallView.html'),{SmallView : result} );
+            con.end()
+      });
+    });
+    
 })
 
 app.get('/contact', (req, res) => {
@@ -136,14 +199,42 @@ app.get('/cancel', (req, res) => {
     res.render( path.join(__dirname + '/Cancel.html') );
 })
 
+app.post('/cancel', (req, res) => {
+    let Booking_Number = req.body.Number;
+    let QueryDelete = "DELETE FROM room_booking WHERE Booking_No = '" + Booking_Number + "'";
+    let QueryUpdate = "UPDATE rental_record SET Cancel = '1' WHERE Booking_No = '" + Booking_Number + "'";
+    let QueryCheck = "SELECT * from rental_record where Booking_No = '" + Booking_Number + "'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+    if (err) throw err;
+        con.query(QueryDelete, function (err, result, fields) {
+            if (err) throw err;
+            con.query(QueryUpdate, function (err, result2, fields) {
+                if (err) throw err;
+                con.query(QueryCheck, function (err, result3, fields) {
+                    if (err) throw err;
+                    if(result3.length != 0)
+                    {
+                        res.render( path.join(__dirname + '/Cancel.html'),{Message : "You have successfully canceled your booking."});
+                    }
+                    else
+                    {
+                        res.render( path.join(__dirname + '/Cancel.html'),{Message : "Invalid Booking Number."} );
+                    }
+                    con.end()
+                });
+            });
+        });
+    });
+})
+
 app.get('/rooms', (req, res) => {
     var con = mysql.createConnection(config);
     con.connect(function(err) {
     if (err) throw err;
-        con.query("SELECT DISTINCT Name,Adults,Children,Price,Picture FROM room_desc", function (err, result, fields) {
+        con.query("SELECT DISTINCT Name,Adults,Children,Price,Size,Bed,Services,Picture FROM room_desc", function (err, result, fields) {
             if (err) throw err;
             res.render( path.join(__dirname + '/rooms.html') , {CheckPeople : result});
-            // console.log(result);
             con.end()
       });
     });
@@ -155,13 +246,12 @@ app.post('/rooms', (req, res) => {
     let Edate = req.body['end_date'];
     let FormatStartDate = formatDate(Sdate);
     let FormatEndDate = formatDate(Edate);
-    let Query = "SELECT ID,Name,Adults,Children,Price,Picture FROM room_desc AS D where D.ID NOT IN "+
+    let Query = "SELECT ID,Name,Adults,Children,Price,Size,Bed,Services,Picture FROM room_desc AS D where D.ID NOT IN "+
     "(SELECT B.ID from room_booking AS B  WHERE "+
     "(B.Start_Date >= " + "'" + FormatStartDate + "'" + 
     " AND B.Start_Date <" + "'" + FormatEndDate + "'" + ") OR (B.End_Date >= "
      + "'" + FormatStartDate + "'" + " AND B.End_Date <" + "'" + FormatEndDate + "'" + ")) AND Adults >= '"+req.body.guest_name 
      +"' AND Children >= '" + req.body.childrens+"'";
-    console.log(Query);
     con.connect(function(err) {
     if (err) throw err;
         con.query(Query, function (err, result, fields) {
@@ -170,7 +260,6 @@ app.post('/rooms', (req, res) => {
             { name : FormatStartDate, endDate : FormatEndDate,
                 Adult : req.body.guest_name, children : req.body.childrens, 
                 CheckPeople : result});
-            //  console.log(result);
             con.end()
       });
     });
@@ -241,7 +330,6 @@ app.post('/rooms/booking/Payment_receipt', async (req, res) => {
                     let Tax = Math.ceil(parseInt(req.body.custPrice) + parseInt(req.body.custPrice*7/100));
                     
                     con.query(QueryCheck, function (err, result, fields) {
-                        // console.log(result);
                         if (err) throw err;
                         if (result.length != 0)//ถูกเช่าไปแล้ว ทำการค้นหาห้องใหม่อีกครั้ง
                         {
@@ -268,7 +356,6 @@ app.post('/rooms/booking/Payment_receipt', async (req, res) => {
                                             con.end()
                                         });
                                     });
-                                    //console.log(result3[0].ID);
                                 }
                                 else{
                                     res.redirect("/?msg=failed")//res.render( path.join(__dirname + '/index.html') , {Message : "Failed"});
@@ -285,7 +372,6 @@ app.post('/rooms/booking/Payment_receipt', async (req, res) => {
                                         Address : req.body.address,Phone : req.body.Phone, StartDate : FormatDate(req.body.custStartDate), 
                                         endDate : FormatDate(req.body.custEndDate), Adult : req.body.custAdults, children : req.body.custChildren,
                                         Style : req.body.custName, Price : req.body.custPrice, TotalTax : Tax, No_Booking : Booking_Number});
-                                    // console.log(result);
                                     con.end()
                                 });
                             });
@@ -304,8 +390,6 @@ app.post('/rooms/booking/Payment_receipt', async (req, res) => {
             })
     }
     while(isDup)
-    
-
 })
 
 app.get('/invoice', (req, res) => {
@@ -340,7 +424,6 @@ app.get('/Admin/table', (req, res) => {
     else{
         Query = "SELECT * FROM rental_record;"
     }
-    console.log(Query);
     var con = mysql.createConnection(config);
     con.connect(function(err) {
         if (err) throw err;
@@ -358,7 +441,6 @@ app.get('/Admin/Checking', (req, res) => {
     let Name;
     if(req.query['start_date'] !== '' && typeof(Sdate) !== 'undefined')
     {
-        // console.log(FormatStartDate);
         if(req.query['name-input'] !== '' && typeof(req.query['name-input']) !== 'undefined')
         {
             let Name = req.query['name-input'];
@@ -382,7 +464,6 @@ app.get('/Admin/Checking', (req, res) => {
         today = formatDate(today);
         Query = "SELECT * FROM room_booking where Start_Date = '" + today +"' AND StatusCheckIn = '0';";
     }
-    console.log(Query);
     var con = mysql.createConnection(config);
     con.connect(function(err) {
         if (err) throw err;
@@ -398,8 +479,6 @@ app.post('/Admin/Checking', (req, res) => {
     let Sdate = req.body['start_date'];
     let FormatStartDate = formatDate(Sdate);
     let Query = "SELECT * FROM room_booking where Start_Date = '" + FormatStartDate +"' AND StatusCheckIn = '0';";
-    console.log(Query);
-    console.log(FormatStartDate);
     let QueryUpdateBook = "UPDATE room_booking SET StatusCheckIn = 1 WHERE Booking_No = '" + Booking_Number + "';";
     let QueryUpdateLog = "UPDATE rental_record SET Stay = 1 WHERE Booking_No = '" + Booking_Number + "';";
     var con = mysql.createConnection(config);
@@ -416,5 +495,67 @@ app.post('/Admin/Checking', (req, res) => {
                     });
                 });
           });
+    }); 
+})
+
+app.get('/Admin/Checkout', (req, res) => {
+    let Query;
+    let Sdate = req.query['start_date'];
+    let FormatStartDate = formatDate(Sdate);
+    let Name;
+    if(req.query['start_date'] !== '' && typeof(Sdate) !== 'undefined')
+    {
+        if(req.query['name-input'] !== '' && typeof(req.query['name-input']) !== 'undefined')
+        {
+            let Name = req.query['name-input'];
+            Query = "SELECT * FROM room_booking where End_Date = '" + FormatStartDate +"' AND StatusCheckIn = '1' And Name LIKE '%" + Name +"%'";
+        }
+        else
+        {
+            Query = "SELECT * FROM room_booking where End_Date = '" + FormatStartDate +"' AND StatusCheckIN = '1'";  
+        }
+        
+    }
+    else if(req.query['name-input'] !== '' && typeof(req.query['name-input']) !== 'undefined')
+    {
+        Name = req.query['name-input'];
+        Query = "SELECT * FROM room_booking where StatusCheckIn = '1' And Name LIKE '%" + Name +"%'";
+    }
+    else{
+        let today = new Date().toLocaleString('en-US', {
+            timeZone: 'Asia/Bangkok'
+        });
+        today = formatDate(today);
+        Query = "SELECT * FROM room_booking where End_Date = '" + today +"' AND StatusCheckIn = '1';";
+    }
+
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+        if (err) throw err;
+            con.query(Query, function (err, result, fields) {
+                if (err) throw err;
+                res.render( path.join(__dirname + '/checkout.html'),{record : result });
+                con.end()
+          });
+    }); 
+})
+
+app.post('/Admin/Checkout', (req, res) => {
+    let Booking_Number = req.body.custID;
+    let Sdate = req.body['start_date'];
+    let FormatStartDate = formatDate(Sdate);
+    let Query = "SELECT * FROM room_booking where End_Date = '" + FormatStartDate +"' AND StatusCheckIn = '1';";
+    let QueryDelete = "DELETE FROM room_booking WHERE Booking_No = '" + Booking_Number + "'";
+    var con = mysql.createConnection(config);
+    con.connect(function(err) {
+        if (err) throw err;
+            con.query(QueryDelete, function (err, result, fields) {
+                if (err) throw err;
+                con.query(Query, function (err, result2, fields) {
+                    if (err) throw err;
+                    res.render( path.join(__dirname + '/checkout.html'), {record : result2});
+                    con.end()
+                });
+            });
     }); 
 })

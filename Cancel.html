@@ -153,17 +153,24 @@
 		</div>
         
     <div class="cancel">
-            
-            <div class="text1">Show Series Number </div>
-            <input type = "text" placeholder="Series Number" name="Number"><br>
-            <input type="button" value="CANCEL"><br>
-          
-            
-            
+        <form action="/cancel" method="POST">
+            <div class="text1">Show Booking Number </div>
+            <input type = "text" placeholder="Please enter Booking number" name="Number" required><br>
+            <input type="submit" value="Accpet"><br>
+        </form>
     </div></div>
 
-    
-
+    <script>
+        window.onload = onloadEvent
+        function onloadEvent() {
+            <% if (locals.Message) { %>
+            let Message = '<%= Message %>';
+            if(typeof Message !== 'undefined'){
+                alert(Message);
+            }
+        <% } %>
+        }
+    </script>
     <!-- Js Plugins -->
     <script src="/public/js/jquery-3.3.1.min.js"></script>
     <script src="/public/js/bootstrap.min.js"></script>

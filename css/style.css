@@ -2374,7 +2374,7 @@ ul, ol {
 
 
 
-.cancel input[type=button]{
+.cancel input[type=submit]{
 	width: 260px;
 	height: 35px;
 	background: #fff;
@@ -2390,11 +2390,11 @@ ul, ol {
 }
 
 
-.cancel input[type=button]:hover{
+.cancel input[type=submit]:hover{
 	opacity: 0.8;
 }
 
-.cancel input[type=button]:active{
+.cancel input[type=submit]:active{
 	opacity: 0.6;
 }
 
@@ -2405,7 +2405,7 @@ ul, ol {
 
 
 
-.cancel input[type=button]:focus{
+.cancel input[type=submit]:focus{
 	outline: none;
 }
 
