@@ -396,9 +396,9 @@ app.get('/invoice', (req, res) => {
         res.render( path.join(__dirname + '/Invoice.html') );
 })
 
-app.get('/Admin', (req, res) => {
-    res.render( path.join(__dirname + '/admin.html'));
-})
+// app.get('/Admin', (req, res) => {
+//     res.render( path.join(__dirname + '/admin.html'));
+// })
 app.get('/Admin/table', (req, res) => {
     let Query;
     let Sdate = req.query['start_date'];
